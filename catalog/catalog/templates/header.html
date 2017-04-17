@@ -1,0 +1,24 @@
+<div class="row">
+  <nav class="navbar">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{{url_for('showCatalog')}}"><b>Catalog App</b></a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        {% if 'username' not in login_session %}
+          <a href="{{url_for('showLogin')}}">
+            <button type="button" class="btn btn-warning btn-md bgc-orange">Login</button>
+          </a>
+        {% else %}
+          <a href="{{url_for('disconnect')}}">
+            <button type="button" class="btn btn-warning btn-md bgc-orange">Logout</button>
+          </a>
+        {% endif %}
+      </li>
+    </ul>
+    </div>
+    <div class="col-sm-2"></div>
+  </nav>
+</div>

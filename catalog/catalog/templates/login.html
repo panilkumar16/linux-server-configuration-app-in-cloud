@@ -1,0 +1,130 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+{% include "flash_message.html" %}
+
+<div class="row content border-between">
+  <!-- First column to display Logged In User Info. Empty for login page -->
+  <div class="col-sm-2 sidenav text-center">
+  </div>
+
+  <!-- Second and Third column to display Categories List -->
+  <div class="col-sm-8 sidenav text-center" style="background-color: white">
+
+    <br>
+    <h3 class="c-blue"><b>Please login using one of the providers:</b></h3>
+    <br>
+
+    <!-- GOOGLE PLUS SIGN IN BUTTON-->
+    <div id="signInButton">
+        <span class="g-signin"
+            data-scope="openid email"
+            data-clientid="1010914298121-u5usv8o1iksge0k2lq83ap6kkni47rq0.apps.googleusercontent.com"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force">
+        </span>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        function signInCallback(authResult) {
+            if (authResult['code']) {
+                // Hide the sign-in button now that the user is authorized
+                //$('#signInButton').attr('style', 'display: none');
+                // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main page
+                $.ajax({
+                    type: 'POST',
+                    url: '/gconnect?state={{STATE}}',
+                    processData: false,
+                    data: authResult['code'],
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success: function(result) {
+                        // Handle or verify the server response if necessary.
+                        if (result) {
+                            //$('#result').html('Login Successful! Redirecting...</br>' + result)
+                            setTimeout(function() {
+                                window.location.href = "/catalog";
+                            }, 100);
+                        } else if (authResult['error']) {
+                            console.log('There was an error: ' + authResult['error']);
+                        } else {
+                            $('#result').html('Failed to make a server side call.  Check your configuration and console.');
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+    <!--END GOOGLE PLUS SIGN IN BUTTON -->
+
+    <!-- START FACEBOOK SIGN IN BUTTON -->
+    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+    </fb:login-button>
+
+    <script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId   : '302298430189934',
+            cookie  : true,     // enable cookies to allow the server to access
+                                // the session
+            xfbml   : true,     // parse social plugins on this page
+            version : 'v2.2'    // use version 2.2
+        });
+    };
+
+    // Load the SDK asynchronously
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function sendTokenToServer() {
+        var access_token = FB.getAuthResponse()['accessToken'];
+        console.log(access_token)
+        console.log('Welcome! Fetching your information...');
+        FB.api('/me', function(response) {
+            console.log('Successful login for: ' + response.name);
+            $.ajax({
+                type: 'POST',
+                url: '/fbconnect?state={{STATE}}',
+                processData: false,
+                data: access_token,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    // Handle or verify the server response if necessary.
+                    if (result) {
+                        //$('#result').html('Login Successful! Redirecting...</br>' + result)
+                        setTimeout(function(){
+                            window.location.href = "/catalog";
+                        }, 100);
+                    } else {
+                        $('#result').html('Failed to make a server-side call.  Check your configuration and console.');
+                    }
+                }
+            });
+        });
+    }
+    </script>
+    <!-- END FACEBOOK SIGN IN BUTTON -->
+
+  </div>
+
+  <!-- Fourth column to display User Info who added the Category.  Empty for login page -->
+  <div class="col-sm-2 sidenav">
+  </div>
+
+</div>
+
+{% include "footer.html" %}
+
+{% endblock %}

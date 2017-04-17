@@ -1,0 +1,81 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+{% include "flash_message.html" %}
+
+  <div class="row content border-between">
+    <!-- First column to display Logged In User Info -->
+    <div class="col-sm-2 sidenav text-center">
+      {% if 'username' in login_session %}
+        <h3>Hi {{login_session['username']}}!</h3>
+        <img src="{{login_session['picture']}}" style = "width: 100px; height: 100px;border-radius: 50px;-webkit-border-radius: 50px;-moz-border-radius: 50px;">
+      {% endif %}
+    </div>
+
+    <!-- Second column to display Categories List -->
+    <div class="col-sm-2 sidenav text-left" style="background-color: white; overflow: auto">
+      {% if 'username' in login_session %}
+        <strong class="c-orange">
+          <a href='{{ url_for('newCategory') }}' class="c-orange">Add Category</a>
+        </strong>
+      <br>
+      {% endif %}
+      <h3 class="c-blue"><b>Categories</b></h3>
+      {% for category in catalog %}
+        <strong class="c-orange">
+          <a href='{{ url_for('showItems', category_id = category.id) }}' class="c-orange">{{category.name}} </a>
+        </strong>
+        <br>
+      {% endfor %}
+    </div>
+
+    <!-- Third column to display Items -->
+    <div class="col-sm-6 sidenav text-left" style="background-color: white; overflow: auto">
+      {% if 'username' in login_session %}
+        {% if login_session['user_id'] == thisCategory.user_id %}
+          <strong class="c-orange">
+          <a href='{{ url_for('editCategory', category_id = thisCategory.id) }}' class="c-orange">Edit Category</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a href='{{ url_for('deleteCategory', category_id = thisCategory.id) }}' class="c-orange">Delete Category</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a href='{{ url_for('newItem', category_id = thisCategory.id) }}' class="c-orange">Add Item</a>
+          </strong>
+        {% else %}
+          <strong class="c-orange">
+          </strong>
+        {% endif %}
+      <br>
+      {% endif %}
+      <h3 class="c-blue"><b>{{thisCategory.name}} (Category)</b></h3>
+        <form action="{{ url_for('newItem', category_id = thisCategory.id) }}" method='post'>
+          <h3 class="c-blue">
+            <b>Item Title:
+              <br>
+              <input type="text" size="30" name="title">
+            </b>
+          </h3>
+          <h3 class="c-blue">
+            <b>Item Description:</b>
+          </h3>
+          <textarea class="c-blue" rows="3" cols="80" size="240" name="description"></textarea>
+          <br>
+          <br>
+          <button type="submit" class="btn btn-warning btn-md bgc-orange">Add Item</button>
+          <a href="{{url_for('showItems', category_id = thisCategory.id)}}"><button type="button" class="btn btn-warning btn-md bgc-orange">Cancel</button></a>
+          <br>
+        </form>
+    </div>
+
+    <!-- Fourth column to display User Info who added the Category -->
+    <div class="col-sm-2 sidenav text-center">
+      {% if 'username' in login_session %}
+        <h3>Category by {{thisCategory.user.name}}!</h3>
+        <img src="{{thisCategory.user.picture}}" style = "width: 100px; height: 100px;border-radius: 50px;-webkit-border-radius: 50px;-moz-border-radius: 50px;">
+      {% endif %}
+    </div>
+
+  </div>
+
+{% include "footer.html" %}
+
+{% endblock %}

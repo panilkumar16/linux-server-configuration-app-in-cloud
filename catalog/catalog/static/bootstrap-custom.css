@@ -1,0 +1,80 @@
+/* Boby in light gray color*/
+body {
+  background-color: #edebeb;
+}
+
+h3 span {
+  font-size: 8px;
+}
+
+/* Set black background color, white text and some padding */
+footer {
+  color: white;
+  padding: 15px;
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+  .sidenav {
+    height: auto;
+    padding: 15px;
+  }
+  .row.content {height:auto;}
+}
+
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+  background-color: #01084c;
+  color: white;
+}
+
+.navbar-brand {
+  color: white;
+}
+
+/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+.row.content {
+  height: 450px;
+}
+
+/* Set gray background color and 100% height */
+.sidenav {
+  padding-top: 20px;
+  height: 100%;
+}
+
+.border-between > [class*='col-']:before {
+ background: #e3e3e3;
+ bottom: 0;
+ content: " ";
+ left: 0;
+ position: absolute;
+ width: 1px;
+ top: 0;
+}
+
+.border-between > [class*='col-']:first-child:before {
+ display: none;
+}
+
+.bgc-orange {
+  background-color: #ef5500;
+}
+
+.c-orange {
+  color: #ec0000;
+}
+
+.c-blue {
+  color: #010a6a;
+}
+
+.hideoption {
+  display:none;
+  visibility:hidden;
+  height:0;
+  font-size:0;
+}
